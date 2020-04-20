@@ -1,8 +1,17 @@
+#include "pic10b_vector.h"   // Pic10b::vector<ItemType>
+#include <iostream>          // std::cout
+#include <iomanip>           // std::boolalpha
+#include <string>            // std::string
+#include <algorithm>         // std::reverse(...)
+
+using std::cout;
+using std::boolalpha;
+using std::string;
+using std::reverse;
+using Pic10b::vector;
+
 /** ************************* THE DRIVER ************************ **/
 int main(){
-
-    using Pic10b::vector;
-    using std::cout;
 
     cout << "Create & display empty vector (v1)\n";
     vector v1;

@@ -1,3 +1,5 @@
+#pragma once
+
 #include <iostream>   // std::ostream, std::cout
 
 namespace Pic10b {
@@ -157,14 +159,14 @@ namespace Pic10b {
 
 
 /** ************************ OTHER FUNCTIONS ************************ **/
-std::ostream& operator<<( std::ostream& out, const Pic10b::vector& v ){
+std::ostream& operator<<( std::ostream& out, const pic10b::vector& v ){
     for ( size_t i = 0 ; i < v.size() ; ++i )
         out << v[i] << ' ';
     return out;
 }
 
 
-void print_vector( const Pic10b::vector& v ){
+void print_vector( const pic10b::vector& v ){
     if ( v.empty() )
         std::cout << "Vector is empty\n";
     else
