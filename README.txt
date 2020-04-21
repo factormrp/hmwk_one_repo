@@ -3,3 +3,5 @@
 2nd commit: isolation of vector header file and companion driver
 
 3rd commit: fixed linkage of header to drivers
+
+4th commit: created new branch to develop templated vector class
