@@ -96,9 +96,9 @@ int main(){
          << "\tv2 != v3 is " << ( v2 != v3 ) << '\n';
     cout << '\n';
 
-    cout << "\tv1 == 3 * v2 is " << ( v1 == 3 * v2 ) << '\n';
+    cout << "\tv1 == 3 * v2 is " << ( v1 == (3 * v2) ) << '\n';
     cout << '\n';
-    cout << "\t2 * v3 == 3 * v2 is " << ( 2 * v3 == 3 * v2 ) << '\n';
+    cout << "\t2 * v3 == 3 * v2 is " << ( (2 * v3) == (3 * v2) ) << '\n';
 
     cout << "\nStatement:\treturn 0;\n";
     return 0;

@@ -44,6 +44,7 @@ namespace Pic10b {
     /** ************************* THE BIG 4 ************************* **/
     vector::vector() : the_data(nullptr), the_size(0), the_capacity(INIT_CAP){
         the_data = new double[the_capacity];
+        cout << "xxxxxxxxxx Default constructor called\n";
     }
 
     vector::vector( const vector& source ) : the_data(nullptr),
@@ -55,6 +56,7 @@ namespace Pic10b {
         for ( int i = 0 ; i < the_size ; ++i ){
             the_data[i] = source.the_data[i];
         }
+        cout << "xxxxxxxxxx Copy constructor called\n";
     }
 
     vector& vector::operator=( const vector& rhs ){
@@ -71,11 +73,13 @@ namespace Pic10b {
             for ( int i = 0 ; i < the_size ; ++i )
                 the_data[i] = rhs.the_data[i];
         }
+        cout << "xxxxxxxxxx Assignment operator called\n";
         return *this;
     }
 
     vector::~vector(){
         delete[] the_data;
+        cout << "xxxxxxxxxx Destructor called\n";
     }
 
     /** *********************** OTHER MEMBERS *********************** **/
