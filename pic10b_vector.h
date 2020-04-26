@@ -22,6 +22,7 @@ namespace Pic10b {
         ~vector();
 
         // other overloads
+        vector<T>& operator+=( const vector<T>& );
         bool operator<( const vector<T>& );
         bool operator<=( const vector<T>& );
         bool operator>( const vector<T>& );
@@ -43,6 +44,7 @@ namespace Pic10b {
         void dump_data() const;
         void push_back( T new_value );
         void pop_back();
+        T norm(const vector<T>& a) { return sqrt(a*a); }
 
       private:
         //Other members [private]
@@ -92,35 +94,42 @@ namespace Pic10b {
         delete[] the_data;
     }
 
-    /** *********************** OTHER MEMBERS *********************** **/
+    /** *********************** MEMBER OPERATORS *********************** **/
+    
+    // template overload for plusequals defined using overloaded addition
+    template<typename T>
+    vector<T>& vector<T>::operator+=(const vector<T>& b){
+        return this + b;
+    }
+
     template<typename T>
     bool vector<T>::operator<( const vector<T>& b){
-        return sqrt(this*this) < sqrt(b*b);
+        return norm(this) < norm(b);
     }
     
     template<typename T>
     bool vector<T>::operator<=( const vector<T>& b){
-        return sqrt(this*this) <= sqrt(b*b);
+        return norm(this) <= norm(b);
     }
 
     template<typename T>
     bool vector<T>::operator>( const vector<T>& b){
-        return sqrt(this*this) > sqrt(b*b);
+        return norm(this) > norm(b);
     }
     
     template<typename T>
     bool vector<T>::operator>=( const vector<T>& b){
-        return sqrt(this*this) >= sqrt(b*b);
+        return norm(this) >= norm(b);
     }
     
     template<typename T>
     bool vector<T>::operator==( const vector<T>& b){
-        return sqrt(this*this) == sqrt(b*b);
+        return this == b;
     }
     
     template<typename T>
     bool vector<T>::operator!=( const vector<T>& b){
-        return sqrt(this*this) != sqrt(b*b);
+        return this != b;
     }
 
     /** *********************** OTHER MEMBERS *********************** **/
@@ -216,7 +225,8 @@ namespace Pic10b {
 
 
 
-/** ************************ OTHER FUNCTIONS ************************ **/
+/** ************************ NON-MEMBER OPERATORS ************************ **/
+// template overload for stream output
 template<typename T>
 std::ostream& operator<<( std::ostream& out, const Pic10b::vector<T>& v ){
     for ( size_t i = 0 ; i < v.size() ; ++i )
@@ -224,11 +234,71 @@ std::ostream& operator<<( std::ostream& out, const Pic10b::vector<T>& v ){
     return out;
 }
 
+// template overload for vector multiplications (serves as vec * vec primary)
 template<typename T>
 T operator*(const T& a, const T& b){
-    
+    T c = 0;
+    for(int i = 0; i < a.size(); i++){
+        c += a[i] * b[i];    
+    }
+    return c;
+}
+// specialization for string vector multiplications
+template<>
+Pic10b::vector<string> operator*(const Pic10b::vector<string>& a, const Pic10b::vector<string>& b){
+    Pic10b::vector<string> c;
+    for(int i = 0; i < a.size(); i++){
+        c.push_back(a[i] + b[i]);    
+    }
+    return c;
+}
+// template overload for non-vector * vector multiplications (serves as nonvec * vec primary)
+template<typename T>
+vector<T> operator*(const T& a, const vector<T>& b){
+    vector<T> c;
+    for(int i = 0; i < a.size(); i++){
+        c.push_back(a * b[i]);    
+    }
+    return c;
+}
+// template overload for vector * non-vector multiplications (serves as vec * nonvec primary)
+template<typename T>
+vector<T> operator*(const vector<T>& a, const T& b){
+    vector<T> c;
+    for(int i = 0; i < a.size(); i++){
+        c.push_back(a[i] * b);    
+    }
+    return c;
+}
+//specialization for vector + string multiplications
+template<>
+Pic10b::vector<string> operator*(const Pic10b::vector<string>& a, const string& b){
+    Pic10b::vector<string> c;
+    for(int i = 0; i < a.size(); i++){
+        c.push_back(a[i] + b); // should process as string concatenation    
+    }
+    return c;
+}
+// specialization for string + vector multiplications
+template<>
+Pic10b::vector<string> operator*(const string& a, const Pic10b::vector<string>& b){
+    Pic10b::vector<string> c;
+    for(int i = 0; i < a.size(); i++){
+        c.push_back(a + b[i]); // should process as string concatenation    
+    }
+    return c;
 }
 
+// template overload for vector addition 
+template<typename T>
+T operator+(const T& a, const T& b){
+    T c;
+    for(int i = 0; i < a.size(); i++){
+        c.push_back(a[i] + b[i]);    
+    }
+    return c;
+}
+/** ************************ OTHER FUNCTIONS ************************ **/
 template<typename T>
 void print_vector( const Pic10b::vector<T>& v ){
     if ( v.empty() )
