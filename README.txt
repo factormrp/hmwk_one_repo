@@ -1,4 +1,4 @@
-============ MASTER ===========
+========= MASTER -OLD =========
 
 1st commit: inclusion of non-templated vector class provided by professor
 
@@ -16,3 +16,12 @@
 
 5th commit: defined template class and overloads
 
+6th commit: fixed templating compilation errors
+
+7th commit: merged master into branch and added gitignore
+
+========= MASTER -NEW =========
+
+8th commit: deleted unneccessay driver that came with initial vector class
+
+9th commit: renamed template as master and updated README
