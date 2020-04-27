@@ -2,6 +2,8 @@
 
 #include <iostream>   // std::ostream, std::cout
 
+using std::string;
+
 namespace Pic10b {
 
     template<typename T>
@@ -44,7 +46,6 @@ namespace Pic10b {
         void dump_data() const;
         void push_back( T new_value );
         void pop_back();
-        T norm(const vector<T>& a) { return sqrt(a*a); }
 
       private:
         //Other members [private]
@@ -57,6 +58,7 @@ namespace Pic10b {
     template<typename T>
     vector<T>::vector() : the_data(nullptr), the_size(0), the_capacity(INIT_CAP){
         the_data = new T[the_capacity];
+        std::cout << "xxxxxxxxxx Default constructor called\n";
     }
 
     template<typename T>
@@ -69,6 +71,7 @@ namespace Pic10b {
         for ( int i = 0 ; i < the_size ; ++i ){
             the_data[i] = source.the_data[i];
         }
+        std::cout << "xxxxxxxxxx Copy constructor called\n";
     }
 
     template<typename T>
@@ -86,12 +89,14 @@ namespace Pic10b {
             for ( int i = 0 ; i < the_size ; ++i )
                 the_data[i] = rhs.the_data[i];
         }
+        std::cout << "xxxxxxxxxx Assignment operator called\n";
         return *this;
     }
 
     template<typename T>
     vector<T>::~vector(){
         delete[] the_data;
+        std::cout << "xxxxxxxxxx Destructor called\n";
     }
 
     /** *********************** MEMBER OPERATORS *********************** **/
@@ -99,37 +104,49 @@ namespace Pic10b {
     // template overload for plusequals defined using overloaded addition
     template<typename T>
     vector<T>& vector<T>::operator+=(const vector<T>& b){
-        return this + b;
+        for(int i = 0; i < the_size; i++){
+            the_data[i] += b[i];
+        }
+        return *this;
     }
 
     template<typename T>
     bool vector<T>::operator<( const vector<T>& b){
-        return norm(this) < norm(b);
+        return ((*this)*(*this)) < (b*b);
     }
-    
+
+
     template<typename T>
     bool vector<T>::operator<=( const vector<T>& b){
-        return norm(this) <= norm(b);
+        return ((*this)*(*this)) <= (b*b);
     }
 
     template<typename T>
     bool vector<T>::operator>( const vector<T>& b){
-        return norm(this) > norm(b);
+        return ((*this)*(*this)) > (b*b);
     }
-    
+
+
     template<typename T>
     bool vector<T>::operator>=( const vector<T>& b){
-        return norm(this) >= norm(b);
+        return ((*this)*(*this)) >= (b*b);
     }
-    
+
+
     template<typename T>
     bool vector<T>::operator==( const vector<T>& b){
-        return this == b;
+        for(int i = 0; i < the_size; i++)
+            if(the_data[i] != b[i])
+                return false;
+        return true;
     }
     
     template<typename T>
     bool vector<T>::operator!=( const vector<T>& b){
-        return this != b;
+        for(int i = 0; i < the_size; i++)
+            if(the_data[i] != b[i])
+                return true;
+        return false;
     }
 
     /** *********************** OTHER MEMBERS *********************** **/
@@ -223,8 +240,6 @@ namespace Pic10b {
 
 } // end Pic10b namespace
 
-
-
 /** ************************ NON-MEMBER OPERATORS ************************ **/
 // template overload for stream output
 template<typename T>
@@ -236,65 +251,65 @@ std::ostream& operator<<( std::ostream& out, const Pic10b::vector<T>& v ){
 
 // template overload for vector multiplications (serves as vec * vec primary)
 template<typename T>
-T operator*(const T& a, const T& b){
+T operator*(const Pic10b::vector<T>& a, const Pic10b::vector<T>& b){
     T c = 0;
     for(int i = 0; i < a.size(); i++){
         c += a[i] * b[i];    
     }
     return c;
 }
-// specialization for string vector multiplications
-template<>
+// template overload for string vector multiplications
+template<typename T>
 Pic10b::vector<string> operator*(const Pic10b::vector<string>& a, const Pic10b::vector<string>& b){
-    Pic10b::vector<string> c;
+    Pic10b::vector<string> c = a;
     for(int i = 0; i < a.size(); i++){
-        c.push_back(a[i] + b[i]);    
+        c[i] = c[i] + b[i];    
     }
     return c;
 }
 // template overload for non-vector * vector multiplications (serves as nonvec * vec primary)
 template<typename T>
-vector<T> operator*(const T& a, const vector<T>& b){
-    vector<T> c;
-    for(int i = 0; i < a.size(); i++){
-        c.push_back(a * b[i]);    
+Pic10b::vector<T> operator*(const T& a, const Pic10b::vector<T>& b){
+    Pic10b::vector<T> c = b;
+    for(int i = 0; i < b.size(); i++){
+        c[i] *= a;    
     }
     return c;
 }
 // template overload for vector * non-vector multiplications (serves as vec * nonvec primary)
 template<typename T>
-vector<T> operator*(const vector<T>& a, const T& b){
-    vector<T> c;
+Pic10b::vector<T> operator*(const Pic10b::vector<T>& a, const T& b){
+    Pic10b::vector<T> c = a;
     for(int i = 0; i < a.size(); i++){
-        c.push_back(a[i] * b);    
+        c[i] *= b;    
     }
     return c;
 }
 //specialization for vector + string multiplications
 template<>
 Pic10b::vector<string> operator*(const Pic10b::vector<string>& a, const string& b){
-    Pic10b::vector<string> c;
+    Pic10b::vector<string> c = a;
     for(int i = 0; i < a.size(); i++){
-        c.push_back(a[i] + b); // should process as string concatenation    
+        c[i] = c[i] + ' ' + b; // should process as string concatenation    
     }
     return c;
 }
 // specialization for string + vector multiplications
 template<>
 Pic10b::vector<string> operator*(const string& a, const Pic10b::vector<string>& b){
-    Pic10b::vector<string> c;
+    Pic10b::vector<string> c = b;
     for(int i = 0; i < a.size(); i++){
-        c.push_back(a + b[i]); // should process as string concatenation    
+        c[i] = a + ' ' + c[i]; // should process as string concatenation    
     }
     return c;
 }
 
 // template overload for vector addition 
 template<typename T>
-T operator+(const T& a, const T& b){
-    T c;
+Pic10b::vector<T> operator+(const Pic10b::vector<T>& a, const Pic10b::vector<T>& b){
+    Pic10b::vector<T> c = a;
     for(int i = 0; i < a.size(); i++){
-        c.push_back(a[i] + b[i]);    
+        c[i] += b[i];    
     }
     return c;
 }
